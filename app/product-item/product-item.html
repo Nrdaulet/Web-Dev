@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="img-wrap">
+    <img [src]="product().image" [alt]="product().name" />
+  </div>
+
+  <div class="card-body">
+    <h3>{{ product().name }}</h3>
+    <p class="price">{{ product().price }} ₸</p>
+    <p class="rating">⭐ {{ product().rating }}</p>
+
+    <div class="actions">
+      <button (click)="onLike()">❤️ {{ product().like }}</button>
+      <button
+        class="delete"
+        (click)="onDelete()"
+        [disabled]="product().like >= 10">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+

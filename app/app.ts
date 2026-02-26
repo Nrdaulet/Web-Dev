@@ -1,51 +1,27 @@
-import {Component,signal} from '@angular/core';
-import{PRODUCTS} from './data/products';
-import {Product} from './models/product.models';
+import { Component, signal } from '@angular/core';
+import { ProductListComponent } from './product-list/product-list';
+import { Propros } from './services/propros';
+import { Category, Product } from './models/intfaces';
 
 @Component({
-  selector:'app-root',
-  template:`
-    <div class="grid">
-      @for (p of products;track p.id) {
-        <div class="card">
-          <img [src]="p.image" alt=""/>
-          <h2>{{p.name}}</h2>
-          <p>{{p.description}}</p>
-          <p><b>{{p.price}}₸</b></p>
-          <div>
-            @for (s of stars; track s) {
-              <span [style.color]="p.rating >=s ? 'gold':'#ccc'">★</span>
-            }
-          </div>
-          <a [href]="p.link" target="_blank" rel="noopener noreferrer">
-            Open on Kaspi
-            <div style="">
-              <button (click)="shareWhatsApp(p)">Share WhatsApp</button>
-              <button (click)="shareTelegram(p)">Share Telegram</button>
-            </div>
-          </a>
-        </div>
-      }
-    </div>
-  `,
-  styleUrl:'./app.css'
+  selector: 'app-root',
+  standalone: true,
+  imports: [ProductListComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
 })
+export class App {
+  categories: Category[] = [];
+  selectedCategoryId: number | null = null;
+  selectedProducts: Product[] = [];
 
-export class App{
-  protected readonly title =signal('online-store');
-  products:Product[]=PRODUCTS;
-  stars=[1,2,3,4,5];
-  shareWhatsApp(product: any){
-    const text=`Check out this product: ${product.link}`;
-    const url=`https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+  constructor(private propros: Propros) {
+    this.categories = this.propros.getCategories();
   }
 
-  shareTelegram(product: any){
-    const url=`
-    https://t.me/share/url?url=${encodeURIComponent(product.link)}`+
-      `&text=${encodeURIComponent(product.name)}`;
-    window.open(url, '_blank');
+  selectCategory(id: number) {
+    this.selectedCategoryId = id;
+    this.selectedProducts = this.propros.getProductsByCategory(id);
   }
-
 }
+

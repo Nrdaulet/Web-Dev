@@ -1,0 +1,18 @@
+<h1>Online Store</h1>
+
+<div class="cats">
+  @for (c of categories; track c.id) {
+    <button
+      (click)="selectCategory(c.id)"
+      [class.active]="c.id === selectedCategoryId"
+    >
+      {{ c.name }}
+    </button>
+  }
+</div>
+
+@if (selectedCategoryId === null) {
+  <p>Выбери категорию 👆</p>
+} @else {
+  <app-product-list [products]="selectedProducts"></app-product-list>
+}
